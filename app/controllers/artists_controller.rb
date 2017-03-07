@@ -1,4 +1,6 @@
 class ArtistsController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, :with => :artist_not_found
+
   def index
     @artists = Artist.all
   end
@@ -48,5 +50,10 @@ class ArtistsController < ApplicationController
 
   def artist_params
     params.require(:artist).permit(:name)
+  end
+
+  def artist_not_found
+    redirect_to artists_path
+    flash[:alert] = "Artist not found."
   end
 end
